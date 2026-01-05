@@ -1,0 +1,69 @@
+﻿@model CoderNexues.Models.Camp
+
+@{
+    ViewData["Title"] = "إضافة معسكر جديد";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-header bg-white border-0 pt-4 px-4">
+                <h3 class="fw-bold text-primary">
+                    <i class="bi bi-plus-circle-fill me-2"></i>إضافة معسكر جديد
+                </h3>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="CampName" class="form-label fw-bold">اسم المعسكر</label>
+                        <input asp-for="CampName" class="form-control" placeholder="مثال: معسكر تطوير الويب دوت نت" />
+                        <span asp-validation-for="CampName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label fw-bold">وصف المعسكر</label>
+                        <textarea asp-for="Description" class="form-control" rows="3" placeholder="نبذة عن المعسكر وأهدافه..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="StartDate" class="form-label fw-bold">تاريخ البداية</label>
+                            <input asp-for="StartDate" class="form-control" type="date" />
+                            <span asp-validation-for="StartDate" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="EndDate" class="form-label fw-bold">تاريخ النهاية</label>
+                            <input asp-for="EndDate" class="form-control" type="date" />
+                            <span asp-validation-for="EndDate" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Status" class="form-label fw-bold">حالة المعسكر</label>
+                        <select asp-for="Status" class="form-select">
+                            <option value="Active">نشط (Active)</option>
+                            <option value="Completed">مكتمل (Completed)</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Index" class="btn btn-light rounded-pill px-4">إلغاء</a>
+                        <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold shadow">
+                            حفظ المعسكر
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

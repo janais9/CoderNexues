@@ -1,0 +1,55 @@
+﻿@model CoderNexues.Models.C_Task
+
+@{
+    ViewData["Title"] = "إضافة مهمة جديدة";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-header bg-white border-0 pt-4 px-4">
+                <h3 class="fw-bold text-gradient">إضافة تحدي جديد</h3>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Create">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">المعسكر التابع له</label>
+                        <select asp-for="CampID" class="form-select" asp-items="ViewBag.CampID"></select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label fw-bold">عنوان المهمة</label>
+                        <input asp-for="Title" class="form-control" placeholder="مثال: بناء الواجهة الأمامية" />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label fw-bold">تفاصيل المهمة</label>
+                        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="DueDate" class="form-label fw-bold">آخر موعد للتسليم</label>
+                            <input asp-for="DueDate" class="form-control" type="datetime-local" />
+                            <span asp-validation-for="DueDate" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="MaxScore" class="form-label fw-bold">الدرجة المستحقة</label>
+                            <input asp-for="MaxScore" class="form-control" type="number" />
+                            <span asp-validation-for="MaxScore" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <a asp-action="Index" class="btn btn-light rounded-pill px-4">إلغاء</a>
+                        <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold shadow">حفظ المهمة</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

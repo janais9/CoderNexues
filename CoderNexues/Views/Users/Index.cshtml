@@ -1,0 +1,68 @@
+﻿@model IEnumerable<CoderNexues.Models.User>
+
+@{
+    ViewData["Title"] = "إدارة المستخدمين";
+}
+
+<div class="container py-5">
+    <h2 class="fw-bold text-gradient mb-4">إدارة المستخدمين والصلاحيات</h2>
+
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="p-3">الاسم</th>
+                        <th>البريد الإلكتروني</th>
+                        <th>الدور الحالي</th>
+                        <th class="text-center">تغيير الصلاحية</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td class="p-3 fw-bold">@user.FullName</td>
+                            <td>@user.Email</td>
+                            <td>
+                                <!-- تلوين الدور عشان نعرف نميزهم -->
+                                @if (user.Role == "Admin")
+                                {
+                                    <span class="badge bg-danger">مدير</span>
+                                }
+                                else if (user.Role == "Trainer")
+                                {
+
+                                    <span class="badge bg-primary">مدرب</span>
+                                }
+                                else
+                                {
+
+                                    <span class="badge bg-secondary">طالب</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <!-- أزرار تغيير الدور -->
+                                <form asp-action="ChangeRole" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@user.UserID" />
+
+                                    <button type="submit" name="newRole" value="Student" class="btn btn-sm btn-outline-secondary" title="تحويل لطالب">
+                                        <i class="bi bi-person"></i> طالب
+                                    </button>
+
+                                    <button type="submit" name="newRole" value="Trainer" class="btn btn-sm btn-outline-primary" title="تحويل لمدرب">
+                                        <i class="bi bi-person-video3"></i> مدرب
+                                    </button>
+
+                                    <button type="submit" name="newRole" value="Admin" class="btn btn-sm btn-outline-danger" title="تحويل لمدير">
+                                        <i class="bi bi-shield-lock"></i> مدير
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,75 @@
+﻿@model IEnumerable<CoderNexues.Models.Camp>
+
+@{
+    ViewData["Title"] = "المعسكرات";
+}
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-primary">المعسكرات الحالية</h2>
+            <p class="text-muted">إدارة ومتابعة كافة المعسكرات التدريبية</p>
+        </div>
+        @if (User.IsInRole("Admin") || true) 
+        {
+            <a asp-action="Create" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                <i class="bi bi-plus-lg ms-2"></i>إضافة معسكر
+            </a>
+        }
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light text-secondary">
+                    <tr>
+                        <th class="py-3 px-4">اسم المعسكر</th>
+                        <th class="py-3">الحالة</th>
+                        <th class="py-3">تاريخ البداية</th>
+                        <th class="py-3">تاريخ النهاية</th>
+                        <th class="py-3 text-center">إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="px-4">
+                                <div class="fw-bold text-dark">@item.CampName</div>
+                                <small class="text-muted">@(item.Description != null && item.Description.Length > 30 ? item.Description.Substring(0, 30) + "..." : item.Description)</small>
+                            </td>
+                            <td>
+                                @if (item.Status == "Active")
+                                {
+                                    <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">نشط</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3">مكتمل</span>
+                                }
+                            </td>
+                            <td>@item.StartDate.ToString("yyyy/MM/dd")</td>
+                            <td>@item.EndDate.ToString("yyyy/MM/dd")</td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Edit" asp-route-id="@item.CampID" class="btn btn-sm btn-outline-primary" title="تعديل"><i class="bi bi-pencil"></i></a>
+                                    <a asp-action="Details" asp-route-id="@item.CampID" class="btn btn-sm btn-outline-info" title="تفاصيل"><i class="bi bi-eye"></i></a>
+                                    <a asp-action="Delete" asp-route-id="@item.CampID" class="btn btn-sm btn-outline-danger" title="حذف"><i class="bi bi-trash"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-inbox fs-1 d-block mb-3 opacity-50"></i>
+                    <p>لا توجد معسكرات مسجلة حالياً</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+﻿@model IEnumerable<CoderNexues.Models.C_Task>
+
+@{
+    ViewData["Title"] = "المهام الدراسية";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-gradient">المهام والتحديات</h2>
+            <p class="text-muted">قائمة المهام المطلوبة في المعسكرات</p>
+        </div>
+        @if (User.IsInRole("Admin") || User.IsInRole("Trainer"))
+        {
+            <a asp-action="Create" class="btn btn-primary rounded-pill px-4 shadow">
+                <i class="bi bi-plus-lg me-2"></i>إضافة مهمة
+            </a>
+        }
+    </div>
+
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 hover-shadow transition-all">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <!-- اسم المعسكر -->
+                            <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2">
+                                @(item.Camp != null ? item.Camp.CampName : "عام")
+                            </span>
+
+                            <!-- الدرجة -->
+                            <small class="text-muted fw-bold">
+                                <i class="bi bi-star-fill text-warning me-1"></i> @item.MaxScore درجة
+                            </small>
+                        </div>
+
+                        <!-- عنوان المهمة -->
+                        <h4 class="card-title fw-bold mb-3">@item.Title</h4>
+
+                        <!-- وصف مختصر -->
+                        <p class="card-text text-muted mb-4">
+                            @(item.Description != null && item.Description.Length > 80 ? item.Description.Substring(0, 80) + "..." : item.Description)
+                        </p>
+
+                        <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top">
+                            <small class="text-danger fw-bold">
+                                <i class="bi bi-clock me-1"></i> @item.DueDate.ToString("yyyy/MM/dd")
+                            </small>
+
+                            <div>
+                                <!-- زر التفاصيل (موجود للكل) -->
+                                <a asp-action="Details" asp-route-id="@item.TaskID" class="btn btn-sm btn-outline-primary rounded-pill px-3">تفاصيل</a>
+
+                                <!-- 👇 زر رفع الحل (للطلاب فقط) 👇 -->
+                                <a asp-controller="Submissions" asp-action="Upload" asp-route-taskId="@item.TaskID" class="btn btn-sm btn-success rounded-pill px-3 ms-1 text-white">
+                                    <i class="bi bi-upload"></i> رفع
+                                </a>
+
+                                <!-- زر الحذف (للأدمن فقط) -->
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a asp-action="Delete" asp-route-id="@item.TaskID" class="text-danger ms-2"><i class="bi bi-trash"></i></a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (!Model.Any())
+        {
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-clipboard-check fs-1 text-muted opacity-50"></i>
+                <p class="text-muted mt-3">لا توجد مهام متاحة حالياً.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+
+    .transition-all {
+        transition: all 0.3s ease;
+    }
+</style>

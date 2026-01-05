@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "الرئيسية";
+}
+
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #a033ff 0%, #00d4ff 100%);
+        color: white;
+        padding: 100px 0;
+        border-radius: 0 0 50px 50px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(160, 51, 255, 0.2);
+    }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+    .glass-box {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 15px;
+        padding: 15px 25px;
+        display: inline-block;
+        margin-bottom: 30px;
+        color: #fff;
+        font-weight: 400;
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .feature-card {
+        border: none;
+        border-radius: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background: white;
+        padding: 30px;
+        text-align: center;
+        height: 100%;
+    }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+        }
+
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        /* أيقونات بالتدرج الجديد */
+        background: linear-gradient(135deg, #a033ff 0%, #00d4ff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="hero-section text-center mb-5">
+    <div class="container position-relative z-1">
+        <h1 class="display-3 fw-bold mb-3">Coder Nexus</h1>
+        <p class="fs-4 mb-5 opacity-90">طويق .. طريقك نحو القمة </p>
+
+        <div class="glass-box mb-4">
+            اصنع لك بصمة وأثرًا واضحًا... بيئة متكاملة للمطورين
+        </div>
+
+        <div class="d-flex justify-content-center gap-3">
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Account" asp-action="Login" class="btn btn-light btn-lg px-5 fw-bold text-primary shadow rounded-pill">تسجيل الدخول</a>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light btn-lg px-5 fw-bold rounded-pill">إنشاء حساب جديد</a>
+            }
+            else
+            {
+                <a asp-controller="Camps" asp-action="Index" class="btn btn-light btn-lg px-5 fw-bold text-primary shadow rounded-pill">تصفح المعسكرات</a>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="container mb-5">
+    <div class="text-center mb-5">
+        <!-- استخدام كلاس التدرج الجديد للنص -->
+        <h2 class="fw-bold text-gradient d-inline-block">لماذا Coder Nexus؟</h2>
+        <p class="text-muted mt-2">نحول التجربة التعليمية إلى رحلة ممتعة ومنظمة</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="feature-card shadow-sm">
+                <i class="bi bi-graph-up-arrow feature-icon"></i>
+                <h4 class="fw-bold mb-3">متابعة دقيقة</h4>
+                <p class="text-muted">تابع مستوى تقدمك يومًا بيوم من خلال لوحات بيانات تفاعلية ورسوم بيانية واضحة.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card shadow-sm">
+                <i class="bi bi-chat-left-quote feature-icon"></i>
+                <h4 class="fw-bold mb-3">تغذية راجعة</h4>
+                <p class="text-muted">احصل على ملاحظات مباشرة من المدربين على أكوادك البرمجية لتطوير مهاراتك.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card shadow-sm">
+                <i class="bi bi-people feature-icon"></i>
+                <h4 class="fw-bold mb-3">مجتمع واحد</h4>
+                <p class="text-muted">بيئة متكاملة تربط الطلاب بالمدربين والإدارة في مكان واحد دون تشتت.</p>
+            </div>
+        </div>
+    </div>
+</div>
