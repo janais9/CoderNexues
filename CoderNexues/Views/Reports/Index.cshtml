@@ -1,0 +1,121 @@
+﻿@model CoderNexues.ViewModels.DashboardViewModel
+
+@{
+    ViewData["Title"] = "الإحصائيات";
+}
+
+<div class="container py-5">
+    <div class="d-flex align-items-center mb-4">
+        <h2 class="fw-bold text-gradient m-0">لوحة القيادة والتقارير</h2>
+        <span class="badge bg-primary ms-3 rounded-pill">Admin Panel</span>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="opacity-75">إجمالي الطلاب</h5>
+                            <h2 class="fw-bold display-5 mb-0">@Model.TotalStudents</h2>
+                        </div>
+                        <i class="bi bi-people-fill fs-1 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 text-white" style="background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="opacity-75">معسكرات نشطة</h5>
+                            <h2 class="fw-bold display-5 mb-0">@Model.ActiveCamps</h2>
+                        </div>
+                        <i class="bi bi-laptop fs-1 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 text-white" style="background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="opacity-75">إجمالي الحلول</h5>
+                            <h2 class="fw-bold display-5 mb-0">@Model.TotalSubmissions</h2>
+                        </div>
+                        <i class="bi bi-code-slash fs-1 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow rounded-4 overflow-hidden">
+                <div class="card-header bg-white border-0 py-4 text-center">
+                    <h3 class="fw-bold text-warning mb-0">
+                        <i class="bi bi-trophy-fill me-2"></i> لوحة المتصدرين
+                    </h3>
+                    <p class="text-muted small">أفضل الطلاب أداءً بناءً على مجموع الدرجات</p>
+                </div>
+
+                <div class="card-body p-0">
+                    <table class="table table-hover align-middle mb-0 text-center">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="p-3">المركز</th>
+                                <th>اسم الطالب</th>
+                                <th>المعسكر</th>
+                                <th>مجموع النقاط</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.TopStudents.Any())
+                            {
+                                int rank = 1;
+                                foreach (var student in Model.TopStudents)
+                                {
+                                    <tr>
+                                        <td class="p-3">
+                                            @if (rank == 1)
+                                            {
+                                                <i class="bi bi-award-fill text-warning fs-3" title="المركز الأول"></i>
+                                            }
+                                            else if (rank == 2)
+                                            {
+                                                <i class="bi bi-award-fill text-secondary fs-3" title="المركز الثاني"></i>
+                                            }
+                                            else if (rank == 3)
+                                            {
+                                                <i class="bi bi-award-fill text-danger fs-3" style="color: #cd7f32 !important;" title="المركز الثالث"></i>
+                                            }
+                                        </td>
+                                        <td class="fw-bold">@student.StudentName</td>
+                                        <td><span class="badge bg-light text-dark border">@student.CampName</span></td>
+                                        <td>
+                                            <span class="badge bg-primary rounded-pill px-3 py-2 fs-6">
+                                                @student.TotalScore نقطة
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    rank++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-muted py-4">لا توجد بيانات كافية لعرض المتصدرين.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<CoderNexues.Models.Camp>
+﻿@using System.Security.Claims
+@model IEnumerable<CoderNexues.Models.Camp>
 
 @{
     ViewData["Title"] = "المعسكرات";
@@ -11,13 +12,29 @@
             <h2 class="fw-bold text-primary">المعسكرات الحالية</h2>
             <p class="text-muted">إدارة ومتابعة كافة المعسكرات التدريبية</p>
         </div>
-        @if (User.IsInRole("Admin") || true) 
+
+        @if (User.IsInRole("Admin"))
         {
             <a asp-action="Create" class="btn btn-primary rounded-pill px-4 shadow-sm">
                 <i class="bi bi-plus-lg ms-2"></i>إضافة معسكر
             </a>
         }
     </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         <div class="card-body p-0">
@@ -34,6 +51,13 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
+                        var currentUserId = User.FindFirstValue("UserID");
+                        bool isJoined = false;
+                        if (currentUserId != null && item.CampUsers != null)
+                        {
+                            isJoined = item.CampUsers.Any(u => u.UserID.ToString() == currentUserId);
+                        }
+
                         <tr>
                             <td class="px-4">
                                 <div class="fw-bold text-dark">@item.CampName</div>
@@ -51,12 +75,37 @@
                             </td>
                             <td>@item.StartDate.ToString("yyyy/MM/dd")</td>
                             <td>@item.EndDate.ToString("yyyy/MM/dd")</td>
+
                             <td class="text-center">
-                                <div class="btn-group" role="group">
-                                    <a asp-action="Edit" asp-route-id="@item.CampID" class="btn btn-sm btn-outline-primary" title="تعديل"><i class="bi bi-pencil"></i></a>
-                                    <a asp-action="Details" asp-route-id="@item.CampID" class="btn btn-sm btn-outline-info" title="تفاصيل"><i class="bi bi-eye"></i></a>
-                                    <a asp-action="Delete" asp-route-id="@item.CampID" class="btn btn-sm btn-outline-danger" title="حذف"><i class="bi bi-trash"></i></a>
-                                </div>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="ManageParticipants" asp-route-id="@item.CampID" class="btn btn-sm btn-outline-dark" title="إدارة المشاركين">
+                                            <i class="bi bi-people-fill"></i>
+                                        </a>
+
+                                        <a asp-action="Edit" asp-route-id="@item.CampID" class="btn btn-sm btn-outline-primary" title="تعديل"><i class="bi bi-pencil"></i></a>
+                                        <a asp-action="Details" asp-route-id="@item.CampID" class="btn btn-sm btn-outline-info" title="تفاصيل"><i class="bi bi-eye"></i></a>
+                                        <a asp-action="Delete" asp-route-id="@item.CampID" class="btn btn-sm btn-outline-danger" title="حذف"><i class="bi bi-trash"></i></a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    if (isJoined)
+                                    {
+                                        <button class="btn btn-sm btn-success disabled opacity-75 rounded-pill px-3">
+                                            <i class="bi bi-check-circle-fill ms-1"></i> مشترك
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="Join" asp-route-id="@item.CampID" method="post" style="display:inline;">
+                                            <button type="submit" class="btn btn-sm btn-primary rounded-pill px-3">
+                                                انضمام <i class="bi bi-arrow-left"></i>
+                                            </button>
+                                        </form>
+                                    }
+                                }
                             </td>
                         </tr>
                     }

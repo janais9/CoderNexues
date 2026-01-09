@@ -1,48 +1,123 @@
 ﻿@model CoderNexues.Models.Camp
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "تفاصيل المعسكر";
 }
 
-<h1>Details</h1>
+<div class="row justify-content-center py-4">
+    <div class="col-lg-10">
 
-<div>
-    <h4>Camp</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CampName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CampName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-    </dl>
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-5">
+            <div class="p-5 text-white text-center" style="background: linear-gradient(135deg, #a033ff 0%, #00d4ff 100%);">
+                <h1 class="fw-bold mb-2">@Model.CampName</h1>
+                <p class="opacity-75 mb-0">@Model.Status - معسكر تدريبي</p>
+            </div>
+
+            <div class="card-body p-5">
+                <div class="row g-4 mb-5">
+                    <div class="col-md-8">
+                        <h5 class="fw-bold text-primary mb-3">عن المعسكر</h5>
+                        <p class="text-muted lead fs-6" style="line-height: 1.8;">@Model.Description</p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="bg-light p-4 rounded-4">
+                            <div class="mb-3">
+                                <small class="text-muted d-block fw-bold">تاريخ البداية</small>
+                                <span class="fs-5">@Model.StartDate.ToString("yyyy/MM/dd")</span>
+                            </div>
+                            <div class="mb-3">
+                                <small class="text-muted d-block fw-bold">تاريخ النهاية</small>
+                                <span class="fs-5">@Model.EndDate.ToString("yyyy/MM/dd")</span>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block fw-bold">الحالة</small>
+                                @if (Model.Status == "Active")
+                                {
+                                    <span class="badge bg-success rounded-pill">نشط</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary rounded-pill">مكتمل</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="my-5 opacity-10">
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="fw-bold text-dark m-0">
+                        <i class="bi bi-megaphone-fill text-danger me-2"></i>آخر الإعلانات
+                    </h3>
+
+                    @if (User.IsInRole("Admin") || User.IsInRole("Trainer"))
+                    {
+                        <button type="button" class="btn btn-danger rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#announcementModal">
+                            <i class="bi bi-plus-lg"></i> نشر إعلان
+                        </button>
+                    }
+                </div>
+
+                @if (Model.Announcements != null && Model.Announcements.Any())
+                {
+                    <div class="d-flex flex-column gap-3">
+                        @foreach (var ann in Model.Announcements.OrderByDescending(a => a.PostedAt))
+                        {
+                            <div class="alert alert-light border-start border-danger border-4 shadow-sm rounded-3 bg-white p-4 mb-0">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <h5 class="fw-bold text-dark mb-0">@ann.Title</h5>
+                                    <small class="text-muted">@ann.PostedAt.ToString("yyyy/MM/dd HH:mm")</small>
+                                </div>
+                                <p class="mb-0 text-secondary">@ann.Content</p>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4 bg-light rounded-3">
+                        <p class="text-muted mb-0">لا توجد إعلانات منشورة في هذا المعسكر حالياً.</p>
+                    </div>
+                }
+            </div>
+
+            <div class="card-footer bg-white border-0 p-4 text-center">
+                <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-5">عودة للقائمة</a>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" asp-route-id="@Model.CampID" class="btn btn-outline-primary rounded-pill px-4 ms-2">تعديل</a>
+                }
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.CampID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<div class="modal fade" id="announcementModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">إعلان جديد</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="PostAnnouncement" method="post">
+                <div class="modal-body pt-4">
+                    <input type="hidden" name="campId" value="@Model.CampID" />
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">العنوان</label>
+                        <input name="title" class="form-control bg-light border-0" required placeholder="تنبيه هام..." />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">المحتوى</label>
+                        <textarea name="content" class="form-control bg-light border-0" rows="4" required placeholder="اكتب تفاصيل الإعلان هنا..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light rounded-pill" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-danger rounded-pill px-4">نشر الإعلان</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

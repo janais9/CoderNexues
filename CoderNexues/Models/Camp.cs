@@ -22,5 +22,8 @@ namespace CoderNexues.Models
 
         public ICollection<CampUser>? CampUsers { get; set; }
         public ICollection<C_Task>? Tasks { get; set; }
+
+        public ICollection<Announcement>? Announcements { get; set; }
+
     }
 }

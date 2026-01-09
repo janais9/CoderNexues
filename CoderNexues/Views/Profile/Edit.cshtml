@@ -1,0 +1,52 @@
+﻿@model CoderNexues.Models.User
+
+@{
+    ViewData["Title"] = "تعديل بياناتي";
+    Layout = "~/Views/Shared/_LandingLayout.cshtml";
+}
+
+<div class="row justify-content-center w-100">
+    <div class="col-md-5 col-lg-4">
+
+        <div class="card border-0 shadow-lg rounded-4 text-center overflow-hidden position-relative">
+
+            <div class="py-4" style="background: linear-gradient(135deg, #a033ff 0%, #00d4ff 100%);">
+                <h4 class="fw-bold text-white m-0">تحديث البيانات</h4>
+            </div>
+
+            <div class="card-body p-4 px-5">
+
+                <form asp-action="Edit" method="post">
+                    <input type="hidden" name="id" value="@Model.UserID" />
+
+                    <div class="mb-3 text-start">
+                        <label class="form-label fw-bold text-muted small">الاسم الكامل</label>
+                        <input name="FullName" value="@Model.FullName" class="form-control rounded-pill" required />
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <label class="form-label fw-bold text-muted small">البريد الإلكتروني</label>
+                        <input name="Email" type="email" value="@Model.Email" class="form-control rounded-pill" required />
+                    </div>
+
+                    <div class="mb-4 text-start">
+                        <label class="form-label fw-bold text-muted small">كلمة المرور الجديدة (اختياري)</label>
+                        <input name="NewPassword" type="password" class="form-control rounded-pill" placeholder="******" />
+                        <div class="form-text text-muted" style="font-size: 0.75rem;">اتركها فارغة إذا كنت لا تريد تغييرها.</div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary rounded-pill py-2 fw-bold shadow-sm">
+                            حفظ التغييرات
+                        </button>
+
+                        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill py-2">
+                            إلغاء
+                        </a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

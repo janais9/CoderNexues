@@ -1,0 +1,54 @@
+﻿@model CoderNexues.Models.Camp
+
+@{
+    ViewData["Title"] = "إدارة المشاركين";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-primary">إدارة المشاركين</h2>
+            <p class="text-muted">المعسكر: @Model.CampName</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill">عودة للمعسكرات</a>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light">
+                <tr>
+                    <th class="p-3">اسم المستخدم</th>
+                    <th>البريد الإلكتروني</th>
+                    <th>الدور في النظام</th>
+                    <th class="text-center">إجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.CampUsers)
+                {
+                    <tr>
+                        <td class="p-3 fw-bold">@user.User.FullName</td>
+                        <td>@user.User.Email</td>
+                        <td>
+                            <span class="badge bg-light text-dark border">@user.User.Role</span>
+                        </td>
+                        <td class="text-center">
+                            <form asp-action="RemoveParticipant" method="post" onsubmit="return confirm('هل أنت متأكد من حذف هذا المستخدم من المعسكر؟');">
+                                <input type="hidden" name="campUserId" value="@user.CampUserID" />
+                                <input type="hidden" name="campId" value="@Model.CampID" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                                    <i class="bi bi-person-x-fill"></i> إزالة من المعسكر
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (!Model.CampUsers.Any())
+        {
+            <div class="p-4 text-center text-muted">لا يوجد مشاركون في هذا المعسكر.</div>
+        }
+    </div>
+</div>

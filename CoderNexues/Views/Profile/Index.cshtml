@@ -2,51 +2,63 @@
 
 @{
     ViewData["Title"] = "الملف الشخصي";
+    Layout = "~/Views/Shared/_LandingLayout.cshtml";
 }
 
-<div class="container py-5">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm rounded-4 text-center p-4">
-                <div class="mb-3">
-                    <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px;">
-                        <span class="fs-1 text-primary fw-bold">@Model.FullName.Substring(0, 1).ToUpper()</span>
+<div class="row justify-content-center w-100">
+    <div class="col-md-6 col-lg-5">
+
+        <div class="mb-4 text-start">
+            <a asp-controller="Tasks" asp-action="Index" class="btn btn-light shadow-sm rounded-pill px-4 text-muted">
+                <i class="bi bi-arrow-right me-2"></i> العودة للوحة التحكم
+            </a>
+        </div>
+
+        <div class="card border-0 shadow-lg rounded-4 text-center overflow-hidden position-relative" style="background: white;">
+
+            <div style="height: 120px; background: linear-gradient(135deg, #a033ff 0%, #00d4ff 100%);"></div>
+
+            <div class="card-body p-4 px-5">
+                <div class="position-relative" style="margin-top: -70px;">
+                    <div class="rounded-circle bg-white p-1 d-inline-block shadow">
+                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center"
+                             style="width: 110px; height: 110px; font-size: 3rem; font-weight: bold; color: #a033ff;">
+                            @Model.FullName.Substring(0, 1).ToUpper()
+                        </div>
                     </div>
                 </div>
-                <h4 class="fw-bold">@Model.FullName</h4>
-                <p class="text-muted">@Model.Role</p>
-                <hr />
-                <div class="text-start">
-                    <p><i class="bi bi-envelope me-2 text-primary"></i> @Model.Email</p>
-                    <p><i class="bi bi-calendar-check me-2 text-primary"></i> عضو منذ @Model.CreatedAt.ToString("yyyy")</p>
+
+                <h3 class="fw-bold mt-3 text-dark">@Model.FullName</h3>
+                <span class="badge bg-secondary bg-opacity-10 text-dark border px-3 py-1 rounded-pill mb-4">@Model.Role</span>
+
+                <div class="text-end bg-light p-4 rounded-4 mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-white p-2 rounded-circle shadow-sm me-3 ms-0 text-primary"><i class="bi bi-envelope"></i></div>
+                        <div>
+                            <small class="text-muted d-block">البريد الإلكتروني</small>
+                            <span class="fw-bold text-dark">@Model.Email</span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white p-2 rounded-circle shadow-sm me-3 ms-0 text-primary"><i class="bi bi-calendar-check"></i></div>
+                        <div>
+                            <small class="text-muted d-block">تاريخ الانضمام</small>
+                            <span class="fw-bold text-dark">@Model.CreatedAt.ToString("yyyy/MM/dd")</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <a asp-action="Edit" class="btn btn-outline-primary rounded-pill py-2 fw-bold">
+                        <i class="bi bi-gear me-2"></i> تعديل بياناتي
+                    </a>
+
+                    <a asp-controller="Account" asp-action="Logout" class="btn btn-danger rounded-pill py-2 fw-bold">
+                        <i class="bi bi-box-arrow-right me-2"></i> تسجيل خروج
+                    </a>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-8">
-            <h3 class="fw-bold text-gradient mb-4">معسكراتي</h3>
-
-            @if (Model.CampUsers != null && Model.CampUsers.Any())
-            {
-                foreach (var cu in Model.CampUsers)
-                {
-                    <div class="card border-0 shadow-sm rounded-4 mb-3">
-                        <div class="card-body p-4 d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5 class="fw-bold mb-1">@cu.Camp.CampName</h5>
-                                <span class="badge bg-success bg-opacity-10 text-success">مشترك نشط</span>
-                            </div>
-                            <a asp-controller="Tasks" asp-action="Index" class="btn btn-outline-primary rounded-pill">عرض المهام</a>
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="alert alert-info rounded-4">
-                    أنت غير مسجل في أي معسكر حالياً. <a asp-controller="Camps" asp-action="Index">تصفح المعسكرات</a>
-                </div>
-            }
-        </div>
     </div>
 </div>

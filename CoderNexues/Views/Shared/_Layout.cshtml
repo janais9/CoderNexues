@@ -3,18 +3,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Coder Nexues</title>
-    
+    <title>@ViewData["Title"] - لوحة التحكم</title>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <!--  (Updated Theme) -->
+
     <style>
         :root {
-            /* تعريف متغير التدرج لاستخدامه في كل مكان */
             --main-gradient: linear-gradient(135deg, #a033ff 0%, #00d4ff 100%);
         }
 
@@ -22,102 +18,168 @@
             font-family: 'IBM Plex Sans Arabic', sans-serif;
             background-color: #f8f9fa;
         }
-
-        /* تعديل العناوين */
-        h1, h2, h3, h4, h5, h6, .navbar-brand {
-            font-weight: 600;
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            height: 95vh;
+            position: fixed;
+            top: 2.5vh;
+            right: 20px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+            z-index: 1000;
         }
 
-        /* تلوين الشعار بالتدرج */
-        .navbar-brand {
-            background: var(--main-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 800 !important;
+        .main-content {
+            margin-right: 320px;
+            padding: 40px 20px;
+            min-height: 100vh;
         }
 
-        /* تعديل الزر الرئيسي في الموقع كامل (Login, Register, Add Camp) */
-        .btn-primary {
-            background: var(--main-gradient) !important;
-            border: none;
-            transition: opacity 0.3s;
+        .nav-link {
+            color: #555;
+            font-weight: 500;
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-            .btn-primary:hover {
-                opacity: 0.9;
-                box-shadow: 0 4px 15px rgba(160, 51, 255, 0.4);
+            .nav-link:hover {
+                background-color: #f8f9fa;
+                color: #a033ff;
+                transform: translateX(-5px);
             }
 
-        /* كلاس لتلوين النصوص بالتدرج */
-        .text-gradient {
-            background: var(--main-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .avatar-box {
+            cursor: pointer;
+            transition: transform 0.2s;
         }
 
-        /* توسيط القائمة */
-        .navbar-nav {
-            flex-direction: row;
-            gap: 20px;
+            .avatar-box:hover {
+                transform: scale(1.02);
+            }
+
+        .guest-container {
+            padding-top: 20px;
         }
     </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container d-flex justify-content-center position-relative">
-                
-                <a class="navbar-brand position-absolute start-0 ms-3" asp-controller="Home" asp-action="Index">Coder Nexus</a>
 
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">الرئيسية</a>
-                    </li>
-                    
-                    @if (User.Identity != null && User.Identity.IsAuthenticated)
-                    {
-                         <li class="nav-item">
-                            <span class="nav-link text-primary fw-bold">حياك الله ، @User.Identity.Name</span>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-danger" asp-controller="Account" asp-action="Logout">تسجيل خروج</a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">دخول</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link btn btn-primary text-white px-3" asp-controller="Account" asp-action="Register">حساب جديد</a>
-                        </li>
-                    }
+    @if (User.Identity.IsAuthenticated)
+    {
+        <aside class="sidebar">
+            <a asp-controller="Profile" asp-action="Index" class="text-decoration-none text-dark avatar-box">
+                <div class="text-center mb-4 pb-3 border-bottom">
+                    <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-2"
+                         style="width: 70px; height: 70px; color: #a033ff; font-size: 1.5rem; font-weight: bold;">
+                        @User.Identity.Name.Substring(0, 1).ToUpper()
+                    </div>
+                    <h5 class="fw-bold mb-1">@User.Identity.Name</h5>
 
                     @if (User.IsInRole("Admin"))
                     {
-                        <li class="nav-item">
-                            <a class="nav-link fw-bold text-danger" asp-controller="Users" asp-action="Index">
-                                <i class="bi bi-gear-fill"></i> إدارة المستخدمين
-                            </a>
-                        </li>
+                        <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3">Admin</span>
                     }
+                    else if (User.IsInRole("Trainer"))
+                    {
 
-                </ul>
+                        <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3">Trainer</span>
+                    }
+                    else
+                    {
+
+                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Student</span>
+                    }
+                </div>
+            </a>
+
+            <nav class="nav flex-column flex-grow-1">
+                <a class="nav-link" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-house-door"></i> الرئيسية
+                </a>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <a class="nav-link text-danger fw-bold" asp-controller="Users" asp-action="Index">
+                        <i class="bi bi-gear-wide-connected"></i> إدارة المستخدمين
+                    </a>
+                    <a class="nav-link text-primary fw-bold" asp-controller="Reports" asp-action="Index">
+                        <i class="bi bi-bar-chart-fill"></i> التقارير
+                    </a>
+                    <a class="nav-link" asp-controller="Camps" asp-action="Index">
+                        <i class="bi bi-boxes"></i> المعسكرات
+                    </a>
+                    <a class="nav-link" asp-controller="Announcements" asp-action="Index">
+                        <i class="bi bi-megaphone-fill"></i> الإعلانات
+                    </a>
+                }
+
+                else if (User.IsInRole("Trainer"))
+                {
+                    <a class="nav-link" asp-controller="Camps" asp-action="Index">
+                        <i class="bi bi-laptop"></i> المعسكرات
+                    </a>
+                    <a class="nav-link" asp-controller="Tasks" asp-action="Index">
+                        <i class="bi bi-list-check"></i> المهام
+                    </a>
+                    <a class="nav-link" asp-controller="Announcements" asp-action="Index">
+                        <i class="bi bi-megaphone"></i> الإعلانات
+                    </a>
+                }
+
+                else
+                {
+                    <a class="nav-link" asp-controller="Tasks" asp-action="Index">
+                        <i class="bi bi-code-slash"></i> المهام والتحديات
+                    </a>
+                    <a class="nav-link" asp-controller="Camps" asp-action="Index">
+                        <i class="bi bi-grid"></i> المعسكرات
+                    </a>
+                    <a class="nav-link" asp-controller="Profile" asp-action="Index">
+                        <i class="bi bi-journal-check"></i> سجل الدرجات
+                    </a>
+                    <a class="nav-link" asp-controller="Announcements" asp-action="Index">
+                        <i class="bi bi-megaphone"></i> الإعلانات
+                    </a>
+                }
+            </nav>
+
+            <div class="mt-auto text-center border-top pt-3">
+                <a asp-controller="Account" asp-action="Logout" class="btn btn-outline-danger btn-sm rounded-pill w-100">
+                    <i class="bi bi-box-arrow-left"></i> تسجيل خروج
+                </a>
+            </div>
+        </aside>
+
+        <div class="main-content">
+            @RenderBody()
+        </div>
+    }
+    else
+    {
+        <nav class="navbar navbar-light bg-white border-bottom shadow-sm mb-4">
+            <div class="container">
+                <a class="navbar-brand fw-bold text-primary" asp-controller="Home" asp-action="Index">Coder Nexus</a>
+                <div>
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-sm btn-outline-primary rounded-pill px-3">دخول</a>
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-sm btn-primary rounded-pill px-3">تسجيل</a>
+                </div>
             </div>
         </nav>
-    </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
+        <div class="container guest-container">
             @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted text-center py-3 mt-4">
-        <div class="container">
-            &copy; 2025 - Coder Nexus - جميع الحقوق محفوظة
         </div>
-    </footer>
+    }
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

@@ -123,5 +123,43 @@ namespace CoderNexues.Controllers
                 return builder.ToString();
             }
         }
+
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ForgotPassword(string email, string newPassword)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+
+            if (user == null)
+            {
+                ViewBag.Error = "البريد الإلكتروني غير مسجل لدينا.";
+                return View();
+            }
+
+            if (string.IsNullOrEmpty(newPassword) || newPassword.Length < 6)
+            {
+                ViewBag.Error = "كلمة المرور يجب أن تكون 6 خانات على الأقل.";
+                return View();
+            }
+
+            using (var sha256 = System.Security.Cryptography.SHA256.Create())
+            {
+                var bytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(newPassword));
+                var builder = new System.Text.StringBuilder();
+                foreach (var b in bytes) builder.Append(b.ToString("x2"));
+                user.PasswordHash = builder.ToString();
+            }
+
+            _context.Users.Update(user);
+            _context.SaveChanges();
+
+            TempData["Success"] = "تم تغيير كلمة المرور بنجاح، يمكنك الدخول الآن.";
+            return RedirectToAction("Login");
+        }
+
     }
 }

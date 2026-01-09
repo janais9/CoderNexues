@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CoderNexues.Data;
+using CoderNexues.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using CoderNexues.Data;
-using CoderNexues.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims; 
+using System.Threading.Tasks;
 
 namespace CoderNexues.Controllers
 {
@@ -29,6 +30,7 @@ namespace CoderNexues.Controllers
         }
 
         // GET: Camps/Details/5
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -40,6 +42,7 @@ namespace CoderNexues.Controllers
                 .Include(c => c.CampUsers) // جلبنا المشتركين
                 .ThenInclude(cu => cu.User) // جلبنا أسماء المشتركين
                 .Include(c => c.Tasks) // جلبنا المهام
+                .Include(c => c.Announcements)
                 .FirstOrDefaultAsync(m => m.CampID == id);
 
             if (camp == null)
@@ -51,6 +54,7 @@ namespace CoderNexues.Controllers
         }
 
         // GET: Camps/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -60,6 +64,7 @@ namespace CoderNexues.Controllers
         // تم التعديل: إزالة التحقق من CampUsers و Tasks لحل مشكلة الحفظ
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("CampID,CampName,Description,StartDate,EndDate,Status")] Camp camp)
         {
             // نتجاهل القوائم لأنها فارغة وقت الإنشاء
@@ -76,6 +81,7 @@ namespace CoderNexues.Controllers
         }
 
         // GET: Camps/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -94,6 +100,7 @@ namespace CoderNexues.Controllers
         // POST: Camps/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("CampID,CampName,Description,StartDate,EndDate,Status")] Camp camp)
         {
             if (id != camp.CampID)
@@ -129,6 +136,7 @@ namespace CoderNexues.Controllers
         }
 
         // GET: Camps/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -149,6 +157,7 @@ namespace CoderNexues.Controllers
         // POST: Camps/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var camp = await _context.Camps.FindAsync(id);
@@ -161,7 +170,6 @@ namespace CoderNexues.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // 👇👇 دالة الانضمام للمعسكر (جديدة) 👇👇
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Join(int id)
@@ -208,5 +216,51 @@ namespace CoderNexues.Controllers
         {
             return _context.Camps.Any(e => e.CampID == id);
         }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin,Trainer")]
+        public async Task<IActionResult> PostAnnouncement(int campId, string title, string content)
+        {
+            var announcement = new Announcement
+            {
+                CampID = campId,
+                Title = title,
+                Content = content,
+                PostedAt = DateTime.Now
+            };
+
+            _context.Announcements.Add(announcement);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = campId });
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ManageParticipants(int id)
+        {
+            var camp = await _context.Camps
+                .Include(c => c.CampUsers)
+                .ThenInclude(cu => cu.User)
+                .FirstOrDefaultAsync(c => c.CampID == id);
+
+            if (camp == null) return NotFound();
+
+            return View(camp);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RemoveParticipant(int campUserId, int campId)
+        {
+            var participant = await _context.CampUsers.FindAsync(campUserId);
+            if (participant != null)
+            {
+                _context.CampUsers.Remove(participant);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("ManageParticipants", new { id = campId });
+        }
+
     }
 }

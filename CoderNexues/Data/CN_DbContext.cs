@@ -17,6 +17,8 @@ namespace CoderNexues.Data
         public DbSet<Evaluation> Evaluations { get; set; }
         public DbSet<FeedbackCategory> FeedbackCategories { get; set; }
         public DbSet<StudentPerformance> StudentPerformances { get; set; }
+        public DbSet<Announcement> Announcements { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
