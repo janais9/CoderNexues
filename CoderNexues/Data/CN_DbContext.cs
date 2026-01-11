@@ -19,6 +19,9 @@ namespace CoderNexues.Data
         public DbSet<StudentPerformance> StudentPerformances { get; set; }
         public DbSet<Announcement> Announcements { get; set; }
         public DbSet<CampSchedule> CampSchedules { get; set; }
+        public DbSet<CertificateRequirement> CertificateRequirements { get; set; }
+        public DbSet<StudentCertificate> StudentCertificates { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CampUser>()
