@@ -44,6 +44,88 @@
                     </div>
                 </div>
 
+                <div class="my-5">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-bold text-dark"><i class="bi bi-map-fill text-primary me-2"></i>خطة المعسكر</h3>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="ManageSchedule" asp-route-id="@Model.CampID" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                                <i class="bi bi-calendar-range me-2"></i> إدارة الخطة
+                            </a>
+                        }
+                    </div>
+
+                    @if (Model.Schedules != null && Model.Schedules.Any())
+                    {
+                        <div class="timeline-container">
+                            @foreach (var item in Model.Schedules.OrderBy(s => s.Date))
+                            {
+                                var colorClass = item.Type == "Project" ? "bg-danger" :
+                                item.Type == "Discussion" ? "bg-warning" : "bg-primary";
+
+                                var iconClass = item.Type == "Project" ? "bi-code-square" :
+                                item.Type == "Discussion" ? "bi-people-fill" : "bi-book-fill";
+
+                                <div class="timeline-item">
+                                    <div class="timeline-icon @colorClass text-white shadow">
+                                        <i class="bi @iconClass"></i>
+                                    </div>
+                                    <div class="timeline-content card border-0 shadow-sm rounded-4 p-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <h6 class="fw-bold mb-0 text-dark">@item.Title</h6>
+                                            <span class="badge bg-light text-dark border">@item.Date.ToString("MM/dd")</span>
+                                        </div>
+                                        <p class="text-muted small mb-0">@item.Description</p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4 bg-light rounded-4 border border-dashed">
+                            <p class="text-muted mb-0">لم يتم نشر الخطة الزمنية بعد.</p>
+                        </div>
+                    }
+                </div>
+
+                <style>
+                    .timeline-container {
+                        position: relative;
+                        padding-left: 30px;
+                        border-left: 2px dashed #dee2e6;
+                        margin-left: 20px;
+                    }
+
+                    .timeline-item {
+                        position: relative;
+                        margin-bottom: 30px;
+                    }
+
+                    .timeline-icon {
+                        position: absolute;
+                        left: -46px;
+                        top: 0;
+                        width: 32px;
+                        height: 32px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 10;
+                        font-size: 0.9rem;
+                    }
+
+                    .timeline-content {
+                        transition: transform 0.2s;
+                    }
+
+                        .timeline-content:hover {
+                            transform: translateX(5px);
+                        }
+                </style>
+
                 <hr class="my-5 opacity-10">
 
                 <div class="d-flex justify-content-between align-items-center mb-4">

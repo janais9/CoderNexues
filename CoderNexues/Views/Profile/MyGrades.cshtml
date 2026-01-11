@@ -1,0 +1,94 @@
+﻿@model CoderNexues.Models.User
+
+@{
+    ViewData["Title"] = "سجل الدرجات";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-4">
+    <div class="d-flex align-items-center mb-4">
+        <div class="bg-white p-3 rounded-circle shadow-sm me-3 text-primary">
+            <i class="bi bi-journal-check fs-3"></i>
+        </div>
+        <div>
+            <h3 class="fw-bold text-dark m-0">سجل الدرجات والتقييمات</h3>
+            <p class="text-muted m-0">تابع أداءك وملاحظات المدربين في جميع المعسكرات</p>
+        </div>
+    </div>
+
+    @if (Model.Submissions != null && Model.Submissions.Any())
+    {
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="p-4 text-muted small fw-bold text-uppercase">المهمة</th>
+                            <th class="p-4 text-muted small fw-bold text-uppercase">المعسكر</th>
+                            <th class="p-4 text-muted small fw-bold text-uppercase">تاريخ التسليم</th>
+                            <th class="p-4 text-muted small fw-bold text-uppercase text-center">الدرجة</th>
+                            <th class="p-4 text-muted small fw-bold text-uppercase">الملاحظات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var sub in Model.Submissions.OrderByDescending(s => s.SubmittedAt))
+                        {
+                            <tr>
+                                <td class="p-4">
+                                    <span class="fw-bold text-dark d-block">@sub.Task.Title</span>
+                                </td>
+                                <td class="p-4">
+                                    <span class="badge bg-light text-dark border">@sub.Task.Camp.CampName</span>
+                                </td>
+                                <td class="p-4 text-muted">
+                                    @sub.SubmittedAt.ToString("yyyy/MM/dd")
+                                </td>
+                                <td class="p-4 text-center">
+                                    @if (sub.Evaluation != null)
+                                    {
+                                        var percent = (double)sub.Evaluation.Score / sub.Task.MaxScore * 100;
+                                        var colorClass = percent >= 90 ? "bg-success" : percent >= 70 ? "bg-primary" : "bg-warning text-dark";
+
+                                        <span class="badge @colorClass rounded-pill px-3 py-2">
+                                            @sub.Evaluation.Score / @sub.Task.MaxScore
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary bg-opacity-25 text-secondary border px-3 py-2">قيد التصحيح</span>
+                                    }
+                                </td>
+                                <td class="p-4">
+                                    @if (sub.Evaluation != null && !string.IsNullOrEmpty(sub.Evaluation.Feedback))
+                                    {
+                                        <div class="bg-light p-3 rounded-3 text-secondary" style="max-width: 300px; font-size: 0.9rem;">
+                                            <i class="bi bi-chat-quote-fill text-primary me-2 opacity-50"></i>
+                                            @sub.Evaluation.Feedback
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">-</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <div class="mb-3 opacity-25">
+                <i class="bi bi-clipboard-x fs-1"></i>
+            </div>
+            <h5 class="fw-bold text-muted">لا توجد سجلات</h5>
+            <p class="text-muted small">لم تقم بتسليم أي مهام حتى الآن.</p>
+            <a asp-controller="Tasks" asp-action="Index" class="btn btn-primary rounded-pill px-4 mt-2">
+                الذهاب للمهام
+            </a>
+        </div>
+    }
+</div>

@@ -70,5 +70,18 @@ namespace CoderNexues.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> MyGrades()
+        {
+            var userId = int.Parse(User.FindFirstValue("UserID"));
+
+            var user = await _context.Users
+                .Include(u => u.Submissions).ThenInclude(s => s.Task).ThenInclude(t => t.Camp)
+                .Include(u => u.Submissions).ThenInclude(s => s.Evaluation)
+                .FirstOrDefaultAsync(u => u.UserID == userId);
+
+            return View(user);
+        }
+
     }
 }

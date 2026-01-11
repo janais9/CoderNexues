@@ -54,68 +54,23 @@
         </div>
     </div>
 
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card border-0 shadow rounded-4 overflow-hidden">
-                <div class="card-header bg-white border-0 py-4 text-center">
-                    <h3 class="fw-bold text-warning mb-0">
-                        <i class="bi bi-trophy-fill me-2"></i> لوحة المتصدرين
-                    </h3>
-                    <p class="text-muted small">أفضل الطلاب أداءً بناءً على مجموع الدرجات</p>
-                </div>
-
-                <div class="card-body p-0">
-                    <table class="table table-hover align-middle mb-0 text-center">
-                        <thead class="bg-light">
-                            <tr>
-                                <th class="p-3">المركز</th>
-                                <th>اسم الطالب</th>
-                                <th>المعسكر</th>
-                                <th>مجموع النقاط</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model.TopStudents.Any())
-                            {
-                                int rank = 1;
-                                foreach (var student in Model.TopStudents)
-                                {
-                                    <tr>
-                                        <td class="p-3">
-                                            @if (rank == 1)
-                                            {
-                                                <i class="bi bi-award-fill text-warning fs-3" title="المركز الأول"></i>
-                                            }
-                                            else if (rank == 2)
-                                            {
-                                                <i class="bi bi-award-fill text-secondary fs-3" title="المركز الثاني"></i>
-                                            }
-                                            else if (rank == 3)
-                                            {
-                                                <i class="bi bi-award-fill text-danger fs-3" style="color: #cd7f32 !important;" title="المركز الثالث"></i>
-                                            }
-                                        </td>
-                                        <td class="fw-bold">@student.StudentName</td>
-                                        <td><span class="badge bg-light text-dark border">@student.CampName</span></td>
-                                        <td>
-                                            <span class="badge bg-primary rounded-pill px-3 py-2 fs-6">
-                                                @student.TotalScore نقطة
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    rank++;
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="4" class="text-muted py-4">لا توجد بيانات كافية لعرض المتصدرين.</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+    <h3 class="fw-bold mb-4">اختر المعسكر لعرض المتصدرين</h3>
+    <div class="row g-4">
+        @foreach (var camp in ViewBag.Camps as List<CoderNexues.Models.Camp>)
+        {
+            <div class="col-md-6 col-lg-4">
+                <a asp-action="CampDetails" asp-route-id="@camp.CampID" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm rounded-4 h-100 hover-shadow">
+                        <div class="card-body p-4 text-center">
+                            <div class="mb-3 text-primary"><i class="bi bi-trophy-fill fs-1"></i></div>
+                            <h5 class="fw-bold text-dark">@camp.CampName</h5>
+                            <span class="btn btn-outline-primary rounded-pill btn-sm mt-2">عرض التقرير</span>
+                        </div>
+                    </div>
+                </a>
             </div>
-        </div>
+        }
     </div>
+</div>
+
 </div>

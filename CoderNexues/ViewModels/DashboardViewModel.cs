@@ -6,6 +6,8 @@
         public int ActiveCamps { get; set; }
         public int TotalSubmissions { get; set; }
         public List<TopStudentDto> TopStudents { get; set; }
+        public List<TopStudentDto> StrugglingStudents { get; set; }
+
     }
 
     public class TopStudentDto

@@ -25,19 +25,60 @@ namespace CoderNexues.Controllers
                 TotalSubmissions = await _context.Submissions.CountAsync()
             };
 
-            viewModel.TopStudents = await _context.Users
-                .Where(u => u.Role == "Student")
-                .Select(u => new TopStudentDto
+            ViewBag.Camps = await _context.Camps.ToListAsync();
+
+            return View(viewModel);
+        }
+
+        public async Task<IActionResult> CampDetails(int id)
+        {
+            var camp = await _context.Camps.FindAsync(id);
+            if (camp == null) return NotFound();
+
+            var viewModel = new DashboardViewModel();
+
+            var totalPossibleScore = await _context.Tasks
+                .Where(t => t.CampID == id)
+                .SumAsync(t => t.MaxScore);
+
+            if (totalPossibleScore == 0) totalPossibleScore = 1;
+
+            viewModel.TopStudents = await _context.CampUsers
+                .Where(cu => cu.CampID == id && cu.User.Role == "Student")
+                .Select(cu => new TopStudentDto
                 {
-                    StudentName = u.FullName,
-                    CampName = u.CampUsers.FirstOrDefault().Camp.CampName ?? "غير مسجل",
-                    TotalScore = u.Submissions.Sum(s => (int?)s.Evaluation.Score) ?? 0
+                    StudentName = cu.User.FullName,
+                    CampName = camp.CampName,
+                    TotalScore = cu.User.Submissions
+                                .Where(s => s.Task.CampID == id)
+                                .Sum(s => (int?)s.Evaluation.Score) ?? 0
                 })
                 .OrderByDescending(s => s.TotalScore)
                 .Take(3)
                 .ToListAsync();
 
+
+            var allStudentsStats = await _context.CampUsers
+                .Where(cu => cu.CampID == id && cu.User.Role == "Student")
+                .Select(cu => new TopStudentDto
+                {
+                    StudentName = cu.User.FullName,
+                    CampName = camp.CampName,
+                    TotalScore = cu.User.Submissions
+                                .Where(s => s.Task.CampID == id)
+                                .Sum(s => (int?)s.Evaluation.Score) ?? 0
+                })
+                .ToListAsync();
+
+            viewModel.StrugglingStudents = allStudentsStats
+                .Where(s => s.TotalScore < (totalPossibleScore * 0.5))
+                .OrderBy(s => s.TotalScore)
+                .Take(3)
+                .ToList();
+
+            ViewBag.CampName = camp.CampName;
             return View(viewModel);
         }
+
     }
 }

@@ -1,0 +1,95 @@
+﻿@model CoderNexues.Models.Camp
+@{
+    ViewData["Title"] = "إدارة خطة المعسكر";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold">خطة معسكر: @Model.CampName</h3>
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill">عودة</a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 rounded-4 p-4">
+                <h5 class="fw-bold mb-3 text-primary">إضافة حدث جديد</h5>
+                <form asp-action="AddScheduleItem" method="post">
+                    <input type="hidden" name="campId" value="@Model.CampID" />
+
+                    <div class="mb-3">
+                        <label class="form-label">التاريخ</label>
+                        <input type="date" name="date" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">العنوان</label>
+                        <input name="title" class="form-control" placeholder="مثال: مناقشة المشاريع" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">النوع</label>
+                        <select name="type" class="form-select">
+                            <option value="Lecture">محاضرة / درس</option>
+                            <option value="Project">مشروع / تسليم</option>
+                            <option value="Discussion">مناقشة / عرض</option>
+                            <option value="Event">حدث خاص</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">الوصف</label>
+                        <textarea name="description" class="form-control" rows="2"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 rounded-pill">إضافة للخطة</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>الحدث</th>
+                            <th>النوع</th>
+                            <th>حذف</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Schedules.OrderBy(s => s.Date))
+                        {
+                            <tr>
+                                <td>@item.Date.ToString("yyyy/MM/dd")</td>
+                                <td>
+                                    <div class="fw-bold">@item.Title</div>
+                                    <small class="text-muted">@item.Description</small>
+                                </td>
+                                <td>
+                                    @if (item.Type == "Project")
+                                    {
+                                        <span class="badge bg-danger">مشروع</span>
+                                    }
+                                    else if (item.Type == "Discussion")
+                                    {
+
+                                        <span class="badge bg-warning text-dark">مناقشة</span>
+                                    }
+                                    else
+                                    {
+
+                                        <span class="badge bg-primary">محاضرة</span>
+                                    }
+                                </td>
+                                <td>
+                                    <form asp-action="DeleteScheduleItem" method="post">
+                                        <input type="hidden" name="scheduleId" value="@item.ScheduleID" />
+                                        <input type="hidden" name="campId" value="@Model.CampID" />
+                                        <button class="btn btn-sm text-danger border-0"><i class="bi bi-trash-fill"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

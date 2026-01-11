@@ -42,6 +42,7 @@ namespace CoderNexues.Controllers
                 .Include(c => c.CampUsers) // جلبنا المشتركين
                 .ThenInclude(cu => cu.User) // جلبنا أسماء المشتركين
                 .Include(c => c.Tasks) // جلبنا المهام
+                .Include(c => c.Schedules)
                 .Include(c => c.Announcements)
                 .FirstOrDefaultAsync(m => m.CampID == id);
 
@@ -61,13 +62,11 @@ namespace CoderNexues.Controllers
         }
 
         // POST: Camps/Create
-        // تم التعديل: إزالة التحقق من CampUsers و Tasks لحل مشكلة الحفظ
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("CampID,CampName,Description,StartDate,EndDate,Status")] Camp camp)
         {
-            // نتجاهل القوائم لأنها فارغة وقت الإنشاء
             ModelState.Remove("CampUsers");
             ModelState.Remove("Tasks");
 
@@ -108,7 +107,6 @@ namespace CoderNexues.Controllers
                 return NotFound();
             }
 
-            // نتجاهل القوائم وقت التعديل أيضاً
             ModelState.Remove("CampUsers");
             ModelState.Remove("Tasks");
 
@@ -190,10 +188,9 @@ namespace CoderNexues.Controllers
                 .Include(cu => cu.Camp)
                 .FirstOrDefaultAsync(cu => cu.UserID == userId && cu.Camp.Status == "Active");
 
-            if (existingCamp != null)
+            if (existingCamp != null && User.IsInRole("Student"))
             {
-                // إذا كان مسجل مسبقاً، نرسل رسالة خطأ
-                TempData["Error"] = $"عفواً، أنت مسجل بالفعل في معسكر '{existingCamp.Camp.CampName}'.";
+                TempData["Error"] = $"عفواً، أنت مسجل بالفعل في معسكر '{existingCamp.Camp.CampName}'. الطلاب مسموح لهم بمعسكر واحد فقط.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -202,7 +199,7 @@ namespace CoderNexues.Controllers
             {
                 CampID = id,
                 UserID = userId,
-                RoleInCamp = "Student"
+                RoleInCamp = User.FindFirst(ClaimTypes.Role)?.Value ?? "Student"
             };
 
             _context.CampUsers.Add(campUser);
@@ -262,5 +259,66 @@ namespace CoderNexues.Controllers
             return RedirectToAction("ManageParticipants", new { id = campId });
         }
 
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ManageSchedule(int id)
+        {
+            var camp = await _context.Camps
+                .Include(c => c.Schedules)
+                .FirstOrDefaultAsync(c => c.CampID == id);
+
+            if (camp == null) return NotFound();
+            return View(camp);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AddScheduleItem(int campId, DateTime date, string title, string? description, string type)
+        {
+            var item = new CampSchedule
+            {
+                CampID = campId,
+                Date = date,
+                Title = title,
+                Description = description ?? "",
+
+                Type = type
+            };
+
+            _context.CampSchedules.Add(item);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("ManageSchedule", new { id = campId });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteScheduleItem(int scheduleId, int campId)
+        {
+            var item = await _context.CampSchedules.FindAsync(scheduleId);
+            if (item != null)
+            {
+                _context.CampSchedules.Remove(item);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction("ManageSchedule", new { id = campId });
+        }
+
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> MyPlan()
+        {
+            var userId = int.Parse(User.FindFirstValue("UserID"));
+
+            var campUser = await _context.CampUsers
+                .Include(c => c.Camp)
+                .FirstOrDefaultAsync(cu => cu.UserID == userId);
+
+            if (campUser == null)
+            {
+                TempData["Error"] = "أنت غير مسجل في أي معسكر بعد.";
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("Details", new { id = campUser.CampID });
+        }
     }
 }
