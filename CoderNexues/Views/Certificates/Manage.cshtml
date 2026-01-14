@@ -1,0 +1,66 @@
+﻿@model IEnumerable<CoderNexues.Models.CertificateRequirement>
+@{
+    ViewData["Title"] = "إدارة الشهادات";
+}
+
+<div class="container py-5">
+    <h3 class="fw-bold">إدارة الشهادات الاحترافية</h3>
+
+    <div class="card shadow-sm p-4 mb-4">
+        <h5>إضافة شهادة مطلوبة</h5>
+        <form asp-action="Create" method="post">
+            <input type="hidden" name="CampID" value="@ViewBag.CampID" />
+            <div class="row">
+                <div class="col-md-4">
+                    <input name="CertificateName" class="form-control" placeholder="اسم الشهادة (مثلاً Network+)" required />
+                </div>
+                <div class="col-md-3">
+                    <input name="Deadline" type="date" class="form-control" required />
+                </div>
+                <div class="col-md-3">
+                    <input name="PassingScore" type="number" class="form-control" placeholder="درجة النجاح" required />
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">إضافة</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <table class="table table-bordered mt-4 align-middle">
+        <thead class="bg-light">
+            <tr>
+                <th>الشهادة</th>
+                <th>الموعد النهائي</th>
+                <th>درجة النجاح</th>
+                <th class="text-center">الإجراءات</th> 
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.CertificateName</td>
+                    <td>@item.Deadline.ToString("yyyy/MM/dd")</td>
+                    <td>@item.PassingScore</td>
+                    <td class="text-center">
+                        <a asp-action="Submissions" asp-route-reqId="@item.ReqID" class="btn btn-sm btn-info text-white rounded-pill px-3">
+                            <i class="bi bi-people-fill me-1"></i> التسليمات
+                        </a>
+                        <a asp-action="EditRequirement" asp-route-id="@item.ReqID" class="btn btn-sm btn-warning text-dark" title="تعديل">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+
+                        <form asp-action="DeleteRequirement" asp-route-id="@item.ReqID" method="post" class="d-inline" onsubmit="return confirm('هل أنت متأكد؟ سيتم حذف جميع تسليمات الطلاب لهذه الشهادة!');">
+                            <button type="submit" class="btn btn-sm btn-danger rounded-end" title="حذف">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a asp-controller="Camps" asp-action="Index" class="btn btn-secondary">عودة للمعسكرات</a>
+</div>

@@ -1,0 +1,230 @@
+﻿@model CoderNexues.ViewModels.DashboardAnalyticsViewModel
+@{
+    ViewData["Title"] = "التحليلات المتقدمة";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-gradient">مركز التحليلات والقرارات</h2>
+            <p class="text-muted">نظرة شمولية على أداء المعسكرات والطلاب</p>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-outline-primary"><i class="bi bi-file-earmark-pdf me-2"></i>تقرير شهري</button>
+            <button class="btn btn-outline-success"><i class="bi bi-file-earmark-excel me-2"></i>تصدير Excel</button>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4 bg-light">
+        <div class="card-body p-3">
+            <form asp-action="Analytics" method="get" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">المعسكر</label>
+                    <select name="campId" class="form-select" asp-items="ViewBag.Camps">
+                        <option value="">كل المعسكرات</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">من تاريخ</label>
+                    <input type="date" name="startDate" class="form-control" value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">إلى تاريخ</label>
+                    <input type="date" name="endDate" class="form-control" value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100 fw-bold">تطبيق الفلتر <i class="bi bi-funnel"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (Model.Alerts.Any())
+    {
+        <div class="mb-4">
+            @foreach (var alert in Model.Alerts)
+            {
+                <div class="alert alert-@(alert.Level == "Danger" ? "danger" : "warning") border-0 shadow-sm rounded-3 d-flex align-items-center">
+                    <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+                    <div>
+                        <strong>تنبيه ذكي:</strong> @alert.Message
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100 text-center p-3">
+                <h6 class="text-muted">إجمالي الطلاب</h6>
+                <h2 class="fw-bold text-primary">@Model.TotalStudents</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100 text-center p-3" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#lateStudentsModal">
+                <h6 class="text-muted">طلاب متأخرين (اضغط)</h6>
+                <h2 class="fw-bold text-danger">@Model.LateStudentsCount</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100 text-center p-3">
+                <h6 class="text-muted">طلاب ملتزمين</h6>
+                <h2 class="fw-bold text-success">@Model.CommittedStudentsCount</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100 text-center p-3">
+                <h6 class="text-muted">المنسحبين</h6>
+                <h2 class="fw-bold text-secondary">@Model.DropoutCount</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-white border-0 pt-4 px-4">
+                    <h5 class="fw-bold">📊 متوسط الأداء لكل معسكر</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="campsChart" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-dark text-white">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">🚨 حالة المهام</h5>
+
+                    <div class="d-flex justify-content-between mb-3 border-bottom border-secondary pb-2">
+                        <span>مهام بانتظار التصحيح</span>
+                        <span class="text-warning fw-bold">@Model.UngradedTasksCount</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 border-bottom border-secondary pb-2">
+                        <span>تسليمات متأخرة</span>
+                        <span class="text-danger fw-bold">@Model.LateTasksCount</span>
+                    </div>
+
+                    <div class="mt-4">
+                        <small class="text-muted d-block">المهمة الأكثر تعثراً:</small>
+                        <strong class="text-info">@Model.MostFailedTask</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-1">
+
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-white border-0 pt-4 px-4">
+                    <h5 class="fw-bold">👨‍🏫 تحليل أداء المدربين</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover align-middle mb-0 text-center">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>المدرب</th>
+                                <th>عدد الطلاب</th>
+                                <th>تم التصحيح</th>
+                                <th>سرعة الاستجابة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var t in Model.TrainerStats)
+                            {
+                                <tr>
+                                    <td class="fw-bold text-start ps-4">@t.Name</td>
+                                    <td>@t.StudentCount</td>
+                                    <td>@t.CompletedEvaluations</td>
+                                    <td>
+                                        <span class="badge @(t.AvgResponseTimeHours < 24 ? "bg-success" : "bg-warning") rounded-pill">
+                                            @t.AvgResponseTimeHours ساعة
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-white border-0 pt-4 px-4">
+                    <h5 class="fw-bold text-warning">🏆 الأفضل أداءً</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        @foreach (var s in Model.TopPerformers)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-warning bg-opacity-25 rounded-circle p-2 me-3 text-warning">
+                                        <i class="bi bi-star-fill"></i>
+                                    </div>
+                                    <span class="fw-bold">@s.StudentName</span>
+                                </div>
+                                <span class="badge bg-primary rounded-pill">@s.TotalScore نقطة</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="lateStudentsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content rounded-4 border-0">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold text-danger">الطلاب المتأخرين</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group">
+                    @foreach (var name in Model.LateStudentsNames)
+                    {
+                        <li class="list-group-item">@name</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var ctx = document.getElementById('campsChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: @Html.Raw(Json.Serialize(Model.CampNames)),
+            datasets: [{
+                label: 'متوسط الدرجات',
+                data: @Html.Raw(Json.Serialize(Model.CampAvgScores)),
+                backgroundColor: [
+                    'rgba(160, 51, 255, 0.7)',
+                    'rgba(0, 212, 255, 0.7)',
+                    'rgba(255, 99, 132, 0.7)'
+                ],
+                borderRadius: 10,
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>

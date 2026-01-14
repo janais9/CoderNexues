@@ -1,0 +1,79 @@
+﻿@model IEnumerable<CoderNexues.Models.CertificateRequirement>
+@{
+    ViewData["Title"] = "الشهادات الاحترافية";
+    var myCerts = ViewBag.MyCerts as List<CoderNexues.Models.StudentCertificate>;
+}
+
+<div class="container py-5">
+    <h2 class="fw-bold text-gradient mb-4">الشهادات الاحترافية</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center rounded-4 py-5">
+            <h4>هذا المعسكر لا يدعم الشهادات الاحترافية حالياً</h4>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var req in Model)
+            {
+                var mySubmission = myCerts.FirstOrDefault(c => c.ReqID == req.ReqID);
+
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm border-0 rounded-4">
+                        <div class="card-header bg-white border-0 pt-4">
+                            <h5 class="fw-bold text-primary">@req.CertificateName</h5>
+                            <span class="badge bg-danger">آخر موعد: @req.Deadline.ToString("yyyy/MM/dd")</span>
+                        </div>
+                        <div class="card-body">
+                            @if (mySubmission != null)
+                            {
+                                <div class="alert alert-success d-flex justify-content-between align-items-center">
+                                    <span><i class="bi bi-check-circle-fill me-2"></i>تم تسليم البيانات</span>
+
+                                    <form asp-action="DeleteSubmission" asp-route-id="@mySubmission.CertID" method="post" onsubmit="return confirm('هل تريد حذف تسليمك وإعادة المحاولة؟');">
+                                        <button type="submit" class="btn btn-sm btn-danger rounded-pill px-3">إعادة التسليم</button>
+                                    </form>
+                                </div>
+
+                                <p><strong>الدرجة:</strong> @mySubmission.Score</p>
+                                <p><strong>الحالة:</strong> @(mySubmission.IsPassed ? "ناجح" : "راسب")</p>
+                            }
+                            else
+                            {
+                                <form asp-action="Submit" method="post">
+                                    <input type="hidden" name="reqId" value="@req.ReqID" />
+
+                                    <div class="mb-2">
+                                        <label>هل اختبرت؟</label>
+                                        <select name="hasTaken" class="form-select">
+                                            <option value="true">نعم</option>
+                                            <option value="false">لا</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label>تاريخ الاختبار</label>
+                                        <input type="date" name="examDate" class="form-control" />
+                                    </div>
+                                    <div class="mb-2">
+                                        <label>الدرجة (من 1000)</label>
+                                        <input type="number" name="score" class="form-control" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>هل نجحت؟</label>
+                                        <select name="isPassed" class="form-select">
+                                            <option value="true">نعم</option>
+                                            <option value="false">لا</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100 rounded-pill">حفظ النتيجة</button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

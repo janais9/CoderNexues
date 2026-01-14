@@ -39,9 +39,9 @@ namespace CoderNexues.Controllers
             }
 
             var camp = await _context.Camps
-                .Include(c => c.CampUsers) // جلبنا المشتركين
+                .Include(c => c.CampUsers) // جيب المشتركين
                 .ThenInclude(cu => cu.User) // جلبنا أسماء المشتركين
-                .Include(c => c.Tasks) // جلبنا المهام
+                .Include(c => c.Tasks) // جيب المهام
                 .Include(c => c.Schedules)
                 .Include(c => c.Announcements)
                 .FirstOrDefaultAsync(m => m.CampID == id);
@@ -178,7 +178,7 @@ namespace CoderNexues.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // 2. جلب رقم المستخدم
+            // 2. جيب لمستخدم
             var userIdString = User.FindFirstValue("UserID");
             if (string.IsNullOrEmpty(userIdString)) return RedirectToAction("Login", "Account");
             int userId = int.Parse(userIdString);
@@ -200,6 +200,7 @@ namespace CoderNexues.Controllers
                 CampID = id,
                 UserID = userId,
                 RoleInCamp = User.FindFirst(ClaimTypes.Role)?.Value ?? "Student"
+                // هنا نحفظ دوره الحقيقي (عشان لو مدرب انضم، ينحفظ كمدرب مو كطالب)
             };
 
             _context.CampUsers.Add(campUser);

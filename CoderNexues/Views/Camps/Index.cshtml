@@ -87,6 +87,8 @@
                                         <a asp-action="Edit" asp-route-id="@item.CampID" class="btn btn-sm btn-outline-primary" title="تعديل"><i class="bi bi-pencil"></i></a>
                                         <a asp-action="Details" asp-route-id="@item.CampID" class="btn btn-sm btn-outline-info" title="تفاصيل"><i class="bi bi-eye"></i></a>
                                         <a asp-action="Delete" asp-route-id="@item.CampID" class="btn btn-sm btn-outline-danger" title="حذف"><i class="bi bi-trash"></i></a>
+                                        <a asp-controller="Certificates" asp-action="Manage" asp-route-campId="@item.CampID" class="btn btn-sm btn-outline-warning" title="الشهادات"><i class="bi bi-award"></i></a>
+
                                     </div>
                                 }
                                 else

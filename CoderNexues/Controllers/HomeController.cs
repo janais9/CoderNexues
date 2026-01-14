@@ -1,31 +1,31 @@
-using System.Diagnostics;
-using CoderNexues.Models;
+﻿using CoderNexues.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoderNexues.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly CN_DbContext _context;
+
+        public HomeController(CN_DbContext context)
         {
-            return View();
+            _context = context;
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Index()
         {
-            return View();
-        }
+            var activeCamps = await _context.Camps
+                .Where(c => c.Status == "Active")
+                .OrderByDescending(c => c.StartDate)
+                .ToListAsync();
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(activeCamps);
         }
 
         public IActionResult Dedication()
         {
             return View();
         }
-
     }
 }

@@ -1,0 +1,38 @@
+﻿@model CoderNexues.Models.C_Task
+
+@{
+    ViewData["Title"] = "حذف المهمة";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-lg rounded-4 text-center overflow-hidden">
+            <div class="card-header bg-danger text-white py-4 border-0">
+                <i class="bi bi-exclamation-triangle-fill display-4"></i>
+                <h3 class="fw-bold mt-2">هل أنت متأكد؟</h3>
+                <p class="mb-0 opacity-75">سيتم حذف المهمة وجميع تسليمات الطلاب المرتبطة بها نهائياً.</p>
+            </div>
+
+            <div class="card-body p-5">
+                <h4 class="fw-bold text-dark mb-2">@Model.Title</h4>
+                <p class="text-muted mb-2">
+                    @(Model.Description != null && Model.Description.Length > 100 ? Model.Description.Substring(0, 100) + "..." : Model.Description)
+                </p>
+
+                <div class="badge bg-light text-dark border px-3 py-2 mt-2">
+                    المعسكر: @(Model.Camp != null ? Model.Camp.CampName : "-")
+                </div>
+
+                <div class="d-flex justify-content-center gap-3 mt-5">
+                    <form asp-action="Delete">
+                        <input type="hidden" asp-for="TaskID" />
+                        <button type="submit" class="btn btn-danger rounded-pill px-5 py-2 fw-bold shadow">
+                            نعم، احذف المهمة
+                        </button>
+                    </form>
+                    <a asp-action="Index" class="btn btn-light rounded-pill px-4 py-2 border">إلغاء</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

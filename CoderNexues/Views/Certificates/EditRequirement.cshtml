@@ -1,0 +1,38 @@
+﻿@model CoderNexues.Models.CertificateRequirement
+@{
+    ViewData["Title"] = "تعديل الشهادة";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4 p-4">
+                <h4 class="fw-bold mb-4 text-primary">تعديل بيانات الشهادة</h4>
+                <form asp-action="EditRequirement">
+                    <input type="hidden" asp-for="ReqID" />
+                    <input type="hidden" asp-for="CampID" />
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">اسم الشهادة</label>
+                        <input asp-for="CertificateName" class="form-control" required />
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label class="form-label fw-bold">الموعد النهائي</label>
+                            <input asp-for="Deadline" type="date" class="form-control" />
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-bold">درجة النجاح</label>
+                            <input asp-for="PassingScore" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <a asp-action="Manage" asp-route-campId="@Model.CampID" class="btn btn-light rounded-pill">إلغاء</a>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4">حفظ التعديلات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

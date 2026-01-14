@@ -15,7 +15,9 @@
                         <th class="p-3">الاسم</th>
                         <th>البريد الإلكتروني</th>
                         <th>الدور الحالي</th>
-                        <th class="text-center">تغيير الصلاحية</th>
+                        <th>الحالة</th>
+                        <th class="text-center">الأجراءات </th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -25,7 +27,6 @@
                             <td class="p-3 fw-bold">@user.FullName</td>
                             <td>@user.Email</td>
                             <td>
-                                <!-- تلوين الدور عشان نعرف نميزهم -->
                                 @if (user.Role == "Admin")
                                 {
                                     <span class="badge bg-danger">مدير</span>
@@ -41,8 +42,19 @@
                                     <span class="badge bg-secondary">طالب</span>
                                 }
                             </td>
+
+                            <td>
+                                @if (user.IsActive)
+                                {
+                                    <span class="badge bg-success">نشط</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">محظور</span>
+                                }
+                            </td>
+
                             <td class="text-center">
-                                <!-- أزرار تغيير الدور -->
                                 <form asp-action="ChangeRole" method="post" class="d-inline">
                                     <input type="hidden" name="id" value="@user.UserID" />
 
@@ -61,7 +73,24 @@
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </form>
+                                <form asp-action="ToggleStatus" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@user.UserID" />
+                                    <button type="submit" class="btn btn-sm @(user.IsActive ? "btn-outline-warning" : "btn-outline-success") ms-1"
+                                            title="@(user.IsActive ? "حظر المستخدم" : "تفعيل المستخدم")">
+                                        @if (user.IsActive)
+                                        {
+                                            <i class="bi bi-slash-circle"></i>
+                                        }
+                                        else
+                                        {
+
+                                            <i class="bi bi-check-circle"></i>
+                                        }
+                                    </button>
+                                </form>
+
                             </td>
+
                         </tr>
                     }
                 </tbody>

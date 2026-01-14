@@ -73,5 +73,18 @@ namespace CoderNexues.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        //BAANNNDDDDDD
+        [HttpPost]
+        public async Task<IActionResult> ToggleStatus(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user != null)
+            {
+                user.IsActive = !user.IsActive;
+
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction("Index");
+        }
     }
 }

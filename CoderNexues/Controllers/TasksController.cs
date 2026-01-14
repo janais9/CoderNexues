@@ -47,7 +47,7 @@ namespace CoderNexues.Controllers
             return View(task);
         }
 
-        [Authorize(Roles = "Admin,Trainer")]
+        [Authorize(Roles = "Trainer")]
         public IActionResult Create()
         {
             ViewData["CampID"] = new SelectList(_context.Camps, "CampID", "CampName");
@@ -72,7 +72,7 @@ namespace CoderNexues.Controllers
             return View(c_task);
         }
 
-        [Authorize(Roles = "Admin,Trainer")]
+        [Authorize(Roles = "Trainer")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -86,7 +86,7 @@ namespace CoderNexues.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Trainer")]
+        [Authorize(Roles = "Trainer")]
         public async Task<IActionResult> Edit(int id, C_Task c_task)
         {
             if (id != c_task.TaskID) return NotFound();
@@ -113,7 +113,7 @@ namespace CoderNexues.Controllers
         }
 
 
-        [Authorize(Roles = "Admin,Trainer")]
+        [Authorize(Roles = "Trainer")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -124,7 +124,7 @@ namespace CoderNexues.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Trainer")]
+        [Authorize(Roles = "Trainer")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var task = await _context.Tasks.FindAsync(id);

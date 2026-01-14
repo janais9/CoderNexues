@@ -1,0 +1,60 @@
+﻿@model IEnumerable<CoderNexues.Models.StudentCertificate>
+@{
+    ViewData["Title"] = "تسليمات الشهادات";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold">تسليمات: @ViewBag.CertName</h3>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary rounded-pill">عودة</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning text-center">لا يوجد تسليمات لهذه الشهادة حتى الآن.</div>
+    }
+    else
+    {
+        <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+            <table class="table table-hover align-middle mb-0 text-center">
+                <thead class="bg-light">
+                    <tr>
+                        <th>اسم الطالب</th>
+                        <th>هل اختبر؟</th>
+                        <th>تاريخ الاختبار</th>
+                        <th>الدرجة</th>
+                        <th>الحالة</th>
+                        <th>إجراء</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var sub in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold text-start ps-4">@sub.Student.FullName</td>
+                            <td>@(sub.HasTakenExam ? "نعم" : "لا")</td>
+                            <td>@(sub.ExamDate?.ToString("yyyy/MM/dd") ?? "-")</td>
+                            <td>@(sub.Score?.ToString() ?? "-")</td>
+                            <td>
+                                @if (sub.IsPassed)
+                                {
+                                    <span class="badge bg-success rounded-pill px-3">ناجح</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger rounded-pill px-3">راسب</span>
+                                }
+                            </td>
+                        </tr>
+                    <td>
+                        <form asp-action="DeleteSubmission" asp-route-id="@sub.CertID" method="post" onsubmit="return confirm('حذف تسليم الطالب؟');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger border-0"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </td>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

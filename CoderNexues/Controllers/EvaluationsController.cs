@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoderNexues.Controllers
 {
-    [Authorize(Roles = "Admin,Trainer")] // للمدربين والادارة فقط
+    [Authorize(Roles = "Admin,Trainer")] 
     public class EvaluationsController : Controller
     {
         private readonly CN_DbContext _context;
@@ -17,8 +17,6 @@ namespace CoderNexues.Controllers
             _context = context;
         }
 
-        // 1. عرض قائمة التسليمات لمهمة معينة
-        // الرابط بيكون: /Evaluations/Review/5
         public async Task<IActionResult> Review(int taskId)
         {
             var submissions = await _context.Submissions
@@ -51,10 +49,8 @@ namespace CoderNexues.Controllers
 
             if (submission == null) return NotFound();
 
-            // تعبئة القائمة المنسدلة بأنواع الملاحظات
             ViewData["CategoryID"] = new SelectList(_context.FeedbackCategories, "CategoryID", "CategoryName");
 
-            // إذا كان مقيّم من قبل، نعرض التقييم القديم للتعديل
             if (submission.Evaluation != null)
             {
                 return View(submission.Evaluation);
@@ -69,40 +65,39 @@ namespace CoderNexues.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Grade(Evaluation evaluation)
         {
-            // التحقق من القيم
-            if (evaluation.Score < 0) ModelState.AddModelError("Score", "الدرجة لا يمكن أن تكون سالبة");
-
-            // لأننا لا نمرر كل الكائنات في الفورم، نتجاهل التحقق منها
             ModelState.Remove("Submission");
             ModelState.Remove("Evaluator");
             ModelState.Remove("Category");
 
             if (ModelState.IsValid)
             {
-                // هل هو تعديل لتقييم قديم أم جديد؟
-                if (evaluation.EvaluationID > 0)
+                if (evaluation.EvaluationID > 0) 
                 {
-                    _context.Update(evaluation);
+                    var oldEvaluation = await _context.Evaluations.AsNoTracking()
+                        .FirstOrDefaultAsync(e => e.EvaluationID == evaluation.EvaluationID);
+
+                    if (oldEvaluation != null)
+                    {
+                        evaluation.EvaluatorID = oldEvaluation.EvaluatorID;
+                        evaluation.EvaluatedAt = DateTime.Now; // نحدث وقت التعديل
+
+                        _context.Update(evaluation);
+                    }
                 }
-                else
+                else 
                 {
-                    // تسجيل اسم المدرب الحالي
                     var userId = int.Parse(User.FindFirst("UserID").Value);
                     evaluation.EvaluatorID = userId;
                     evaluation.EvaluatedAt = DateTime.Now;
-
                     _context.Add(evaluation);
                 }
 
                 await _context.SaveChangesAsync();
 
-                // نرجع لقائمة التسليمات لنفس المهمة
-                // نحتاج نجيب TaskId عشان نرجع لنفس الصفحة
                 var sub = await _context.Submissions.FindAsync(evaluation.SubmissionID);
                 return RedirectToAction("Review", new { taskId = sub.TaskID });
             }
 
-            // في حال الخطأ نعيد تعبئة القائمة
             ViewData["CategoryID"] = new SelectList(_context.FeedbackCategories, "CategoryID", "CategoryName", evaluation.CategoryID);
             return View(evaluation);
         }
