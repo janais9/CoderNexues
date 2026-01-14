@@ -29,7 +29,6 @@ namespace CoderNexues.Controllers
             return View(camps);
         }
 
-        // GET: Camps/Details/5
 
         public async Task<IActionResult> Details(int? id)
         {
@@ -39,9 +38,9 @@ namespace CoderNexues.Controllers
             }
 
             var camp = await _context.Camps
-                .Include(c => c.CampUsers) // جيب المشتركين
-                .ThenInclude(cu => cu.User) // جلبنا أسماء المشتركين
-                .Include(c => c.Tasks) // جيب المهام
+                .Include(c => c.CampUsers) 
+                .ThenInclude(cu => cu.User) 
+                .Include(c => c.Tasks) 
                 .Include(c => c.Schedules)
                 .Include(c => c.Announcements)
                 .FirstOrDefaultAsync(m => m.CampID == id);
@@ -54,14 +53,12 @@ namespace CoderNexues.Controllers
             return View(camp);
         }
 
-        // GET: Camps/Create
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Camps/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -79,7 +76,6 @@ namespace CoderNexues.Controllers
             return View(camp);
         }
 
-        // GET: Camps/Edit/5
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -96,7 +92,6 @@ namespace CoderNexues.Controllers
             return View(camp);
         }
 
-        // POST: Camps/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -133,7 +128,6 @@ namespace CoderNexues.Controllers
             return View(camp);
         }
 
-        // GET: Camps/Delete/5
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -152,7 +146,6 @@ namespace CoderNexues.Controllers
             return View(camp);
         }
 
-        // POST: Camps/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -172,18 +165,15 @@ namespace CoderNexues.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Join(int id)
         {
-            // 1. التأكد أن المستخدم مسجل دخول
             if (!User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Login", "Account");
             }
 
-            // 2. جيب لمستخدم
             var userIdString = User.FindFirstValue("UserID");
             if (string.IsNullOrEmpty(userIdString)) return RedirectToAction("Login", "Account");
             int userId = int.Parse(userIdString);
 
-            // 3. التحقق: هل الطالب مسجل في معسكر نشط آخر؟
             var existingCamp = await _context.CampUsers
                 .Include(cu => cu.Camp)
                 .FirstOrDefaultAsync(cu => cu.UserID == userId && cu.Camp.Status == "Active");
@@ -194,13 +184,11 @@ namespace CoderNexues.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // 4. تسجيل الطالب
             var campUser = new CampUser
             {
                 CampID = id,
                 UserID = userId,
                 RoleInCamp = User.FindFirst(ClaimTypes.Role)?.Value ?? "Student"
-                // هنا نحفظ دوره الحقيقي (عشان لو مدرب انضم، ينحفظ كمدرب مو كطالب)
             };
 
             _context.CampUsers.Add(campUser);
