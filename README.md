@@ -32,7 +32,7 @@
 
 This project is built using **Clean MVC Architecture** and modern .NET technologies.
 
-- **Framework:** ASP.NET Core 8.0 (MVC)
+- **Framework:** ASP.NET Core 10.0 (MVC)
 - **Database:** SQL Server
 - **ORM:** Entity Framework Core (Code-First Approach)
 - **Authentication:** Custom Cookie-Based Authentication & Claims
