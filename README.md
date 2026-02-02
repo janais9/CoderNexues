@@ -8,11 +8,11 @@
 ## 🌟 Key Features
 
 ###  :dizzy: Genral CoderNexus
-- Home Page:
- ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/G.C.png)
-- Sign Up / Sign in Page:
- ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/G.C.png)
- ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/G.C.png)
+> Home Page:
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CN(1).png)
+> Sign Up / Sign in Page:
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CN(9).png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CN(8).png)
 
 
 ### 🎓 For Students
@@ -33,13 +33,14 @@
 - **User Management:** Full control over roles (Student, Trainer, Admin) with activation/ban capabilities.
 - **Smart Alerts:** Automated alerts for low-performing students or delayed grading.
 - **Camp Scheduling:** Define bootcamp timelines and major events.
-
- ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/G.C.png)
- ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/G.C.png)
- ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/G.C.png)
- ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/G.C.png)
- ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/G.C.png)
- ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/G.C.png)
+  
+   > Admin Dashboard
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CN(7).png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CN(6).png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CN(5).png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CN(4).png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CN(3).png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CN(2).png)
 
 ---
 
