@@ -11,8 +11,8 @@
 > Home Page:
  ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CN(1).png)
 > Sign Up / Sign in Page:
- ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CN(9).png)
- ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CN(8).png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/LOG.png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/REG.png)
 
 
 ### 🎓 For Students
