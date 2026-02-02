@@ -7,6 +7,14 @@
 
 ## 🌟 Key Features
 
+###  :dizzy: Genral CoderNexus
+- Home Page:
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/G.C.png)
+- Sign Up / Sign in Page:
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/G.C.png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/G.C.png)
+
+
 ### 🎓 For Students
 - **Interactive Dashboard:** View enrolled bootcamps, upcoming tasks, and progress.
 - **Task Submission:** Upload assignments (GitHub links/files) directly.
@@ -25,6 +33,13 @@
 - **User Management:** Full control over roles (Student, Trainer, Admin) with activation/ban capabilities.
 - **Smart Alerts:** Automated alerts for low-performing students or delayed grading.
 - **Camp Scheduling:** Define bootcamp timelines and major events.
+
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/G.C.png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/G.C.png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/G.C.png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/G.C.png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/G.C.png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/G.C.png)
 
 ---
 
