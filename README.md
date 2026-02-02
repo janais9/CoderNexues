@@ -27,7 +27,15 @@
 - **Task Creation:** Create assignments with deadlines and grading criteria.
 - **Grading System:** Review submissions, assign grades, and provide feedback.
 - **Performance Tracking:** Monitor student progress and identify struggling students.
-
+  
+   > Trainers Dashboard
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CNt(2).png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CNt(3).png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CNt(4).png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CNt(5).png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CNt(6).png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CNt(1).png)
+   
 ### 📊 For Administration (Admin)
 - **Advanced Analytics Dashboard:** Real-time insights using **Chart.js** (Active students, completion rates, trainer performance).
 - **User Management:** Full control over roles (Student, Trainer, Admin) with activation/ban capabilities.
