@@ -59,6 +59,9 @@
  ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CN(4).png)
  ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CN(3).png)
  ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CN(2).png)
+  ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/c1.png)
+ ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/c2.png)
+
 
 ---
 
@@ -85,6 +88,7 @@ The system is built on a relational database with the following core entities:
 - **Tasks & Submissions:** Manages assignments and student work.
 - **Evaluations:** Stores grades and qualitative feedback.
 - **Certificates:** Tracks professional certification requirements and results.
+  ![App Screenshot](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/erd.png)
 
 ---
 
