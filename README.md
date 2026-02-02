@@ -21,6 +21,16 @@
 - **Grades & Feedback:** Receive detailed feedback and scores from trainers.
 - **Roadmap Timeline:** Visualize the bootcamp schedule and key milestones.
 - **Certificates:** Submit exam results and track professional certifications.
+     > Students Dashboard
+![App Screenshot 9](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CnS(9).png)
+![App Screenshot 8](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CnS(8).png)
+![App Screenshot 7](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CnS(7).png)
+![App Screenshot 6](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CnS(6).png)
+![App Screenshot 5](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CnS(5).png)
+![App Screenshot 4](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CnS(4).png)
+![App Screenshot 3](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CnS(3).png)
+![App Screenshot 2](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CnS(2).png)
+![App Screenshot 1](https://raw.githubusercontent.com/janais9/CoderNexues/main/imgs/CnS(1).png)
 
 ### 👨‍🏫 For Trainers
 - **Camp Management:** Manage students and bootcamp details.
